@@ -23,9 +23,6 @@ RUN mkdir -p /etc/supervisor.conf.d && \
 # Set environment variable
 ENV	APP_DIR /app
 
-RUN	yum -y install  && \ 
-	yum clean all
-
 ADD nginx_nginx.conf /etc/nginx/nginx.conf
 ADD	nginx_default.conf /etc/nginx/conf.d/default.conf
 
