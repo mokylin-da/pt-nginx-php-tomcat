@@ -4,6 +4,8 @@ MAINTAINER zengweigang <zengweigang@gmail.com>
 ENV TZ "Asia/Shanghai"
 ENV TERM xterm
 
+ADD nginx.repo /etc/yum.repos.d/
+
 RUN yum install -y curl wget tar bzip2 unzip vim-enhanced passwd sudo yum-utils hostname net-tools rsync man \
         gcc gcc-c++ git make automake cmake patch logrotate python-devel libpng-devel libjpeg-devel \
         nginx php-cli php-mysql php-pear php-pecl-memcache php-ldap php-mbstring php-soap php-dom php-gd php-xmlrpc php-fpm php-mcrypt java-1.8.0-openjdk-devel.x86_64
