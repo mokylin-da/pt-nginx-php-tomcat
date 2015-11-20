@@ -8,7 +8,8 @@ ADD nginx.repo /etc/yum.repos.d/
 
 RUN yum install -y curl wget tar bzip2 unzip vim-enhanced passwd sudo yum-utils hostname net-tools rsync man \
         gcc gcc-c++ git make automake cmake patch logrotate python-devel libpng-devel libjpeg-devel \
-        nginx php-cli php-mysql php-pear php-pecl-memcache php-ldap php-mbstring php-soap php-dom php-gd php-xmlrpc php-fpm php-mcrypt java-1.8.0-openjdk-devel.x86_64
+        nginx php-cli php-mysql php-pear php-pecl-memcache php-ldap php-mbstring php-soap php-dom php-gd php-xmlrpc php-fpm php-mcrypt java-1.8.0-openjdk-devel.x86_64 \
+        fuse-devel libcurl-devel libxml2-devel make openssl-devel
 
 ADD aliyun-epel.repo /etc/yum.repos.d/epel.repo
 
@@ -21,6 +22,10 @@ ADD supervisord.conf /etc/supervisord.conf
 RUN mkdir -p /etc/supervisor.conf.d && \
     mkdir -p /var/log/supervisor
 
+RUN wget https://github.com/s3fs-fuse/s3fs-fuse/archive/v1.79.tar.gz -O /usr/src/v1.79.tar.gz
+
+RUN tar xvz -C /usr/src -f /usr/src/v1.79.tar.gz
+RUN cd /usr/src/s3fs-fuse-1.79 && ./autogen.sh && ./configure --prefix=/usr && make && make install
 
 # Set environment variable
 ENV	APP_DIR /app
