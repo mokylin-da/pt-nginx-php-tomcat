@@ -22,7 +22,7 @@ ADD supervisord.conf /etc/supervisord.conf
 RUN mkdir -p /etc/supervisor.conf.d && \
     mkdir -p /var/log/supervisor
 
-RUN wget https://github.com/s3fs-fuse/s3fs-fuse/archive/v1.79.tar.gz -O /usr/src/v1.79.tar.gz
+RUN wget https://raw.githubusercontent.com/szmolin/dist/master/s3fs/v1.79.tar.gz -O /usr/src/v1.79.tar.gz
 
 RUN tar xvz -C /usr/src -f /usr/src/v1.79.tar.gz
 RUN cd /usr/src/s3fs-fuse-1.79 && ./autogen.sh && ./configure --prefix=/usr && make && make install
@@ -48,7 +48,7 @@ WORKDIR $CATALINA_HOME
 
 ENV TOMCAT_MAJOR 8
 ENV TOMCAT_VERSION 8.0.28
-ENV TOMCAT_TGZ_URL https://raw.githubusercontent.com/chentmin/dist/master/tomcat/apache-tomcat-8.0.28.tar.gz
+ENV TOMCAT_TGZ_URL https://raw.githubusercontent.com/szmolin/dist/master/tomcat/apache-tomcat-8.0.28.tar.gz
 
 RUN set -x \
 	&& curl -fSL "$TOMCAT_TGZ_URL" -o tomcat.tar.gz \
