@@ -31,7 +31,6 @@ RUN cd /usr/src/s3fs-fuse-1.79 && ./autogen.sh && ./configure --prefix=/usr && m
 ENV	APP_DIR /app
 
 ADD nginx_nginx.conf /etc/nginx/nginx.conf
-ADD	nginx_default.conf /etc/nginx/conf.d/default.conf
 
 ADD	php_www.conf /etc/php-fpm.d/www.conf
 RUN	sed -i 's/;cgi.fix_pathinfo=1/cgi.fix_pathinfo=0/' /etc/php.ini
