@@ -4,12 +4,53 @@ MAINTAINER zengweigang <zengweigang@gmail.com>
 ENV TZ "Asia/Shanghai"
 ENV TERM xterm
 
-ADD nginx.repo /etc/yum.repos.d/
-
 RUN yum install -y curl wget tar bzip2 unzip vim-enhanced passwd sudo yum-utils hostname net-tools rsync man \
         gcc gcc-c++ git make automake cmake patch logrotate python-devel libpng-devel libjpeg-devel \
-        nginx php-cli php-mysql php-pear php-pecl-memcache php-ldap php-mbstring php-soap php-dom php-gd php-xmlrpc php-fpm php-mcrypt java-1.8.0-openjdk-devel.x86_64 \
-        fuse-devel libcurl-devel libxml2-devel make openssl-devel
+        php-cli php-mysql php-pear php-pecl-memcache php-ldap php-mbstring php-soap php-dom php-gd php-xmlrpc php-fpm php-mcrypt java-1.8.0-openjdk-devel.x86_64 \
+        fuse-devel libcurl-devel libxml2-devel make openssl-devel \
+		pcre-devel zlib-devel openssl-devel
+
+ENV NGINX_VERSION 1.8.0
+RUN mkdir /opt/nginx && wget http://nginx.org/download/nginx-${NGINX_VERSION}.tar.gz -O /opt/nginx.tar.gz && tar xfz /opt/nginx.tar.gz -C /opt/nginx && rm -f /opt/nginx.tar.gz
+
+RUN mkdir /opt/http_subs && wget https://raw.githubusercontent.com/szmolin/dist/master/ngx_http_substitutions_filter_module/ngx_http_subs_filter_module.c -O /opt/http_subs/ngx_http_subs_filter_module.c && wget https://raw.githubusercontent.com/szmolin/dist/master/ngx_http_substitutions_filter_module/config -O /opt/http_subs/config
+
+RUN useradd --system --no-create-home --user-group nginx && mkdir -p /var/cache/nginx/ && \
+    cd /opt/nginx/nginx-${NGINX_VERSION} && ./configure --prefix=/etc/nginx \
+	--sbin-path=/usr/sbin/nginx \
+	--conf-path=/etc/nginx/nginx.conf \
+	--error-log-path=/var/log/nginx/error.log \
+	--http-log-path=/var/log/nginx/access.log \
+	--pid-path=/var/run/nginx.pid \
+	--lock-path=/var/run/nginx.lock \
+	--http-client-body-temp-path=/var/cache/nginx/client_temp \
+	--http-proxy-temp-path=/var/cache/nginx/proxy_temp \
+	--http-fastcgi-temp-path=/var/cache/nginx/fastcgi_temp \
+	--http-uwsgi-temp-path=/var/cache/nginx/uwsgi_temp \
+	--http-scgi-temp-path=/var/cache/nginx/scgi_temp \
+	--user=nginx \
+	--group=nginx \
+	--with-http_ssl_module \
+	--with-http_realip_module \
+	--with-http_addition_module \
+	--with-http_sub_module \
+	--with-http_dav_module \
+	--with-http_flv_module \
+	--with-http_mp4_module \
+	--with-http_gunzip_module \
+	--with-http_gzip_static_module \
+	--with-http_random_index_module \
+	--with-http_secure_link_module \
+	--with-http_stub_status_module \
+	--with-http_auth_request_module \
+	--with-mail \
+	--with-mail_ssl_module \
+	--with-file-aio \
+	--with-http_spdy_module \
+	--with-ipv6 \
+	--with-threads \
+	--add-module=/opt/http_subs \
+	&& make && make install
 
 ADD aliyun-epel.repo /etc/yum.repos.d/epel.repo
 
